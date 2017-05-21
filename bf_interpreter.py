@@ -21,47 +21,8 @@ class Stack:
      def size(self):
          return len(self.items)
 
-class _Getch:
-   """Gets a single character from standard input.  Does not echo to the
-screen."""
-   def __init__(self):
-       try:
-           self.impl = _GetchWindows()
-       except ImportError:
-           self.impl = _GetchUnix()
-
-   def __call__(self): return self.impl()
-
-
-class _GetchUnix:
-   def __init__(self):
-       import tty, sys
-
-   def __call__(self):
-       import sys, tty, termios
-       fd = sys.stdin.fileno()
-       old_settings = termios.tcgetattr(fd)
-       try:
-           tty.setraw(sys.stdin.fileno())
-           ch = sys.stdin.read(1)
-       finally:
-           termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-       return ch
-
-
-class _GetchWindows:
-   def __init__(self):
-       import msvcrt
-
-   def __call__(self):
-       import msvcrt
-       return msvcrt.getch()
-
-
-getch = _Getch()
-
 # LEXER
-tokens = ('PLUS', 'MINUS', 'LEFT', 'RIGHT', 'OUTPUT', 'INPUT', 'LBRACKET', 'RBRACKET', 'NEWLINE') 
+tokens = ('PLUS', 'MINUS', 'LEFT', 'RIGHT', 'UP', 'DOWN', 'OUTPUT', 'INPUT', 'LBRACKET', 'RBRACKET', 'NEWLINE', 'TOP', 'CLEAR') 
 
 t_PLUS = r'\+'
 t_MINUS = r'-'
@@ -72,6 +33,10 @@ t_INPUT = r','
 t_LBRACKET = r'\['
 t_RBRACKET = r'\]'
 t_NEWLINE = r'\n'
+t_TOP = r'\*'
+t_CLEAR = r'\@'
+t_UP = r'\^'
+t_DOWN = r'\v'
 
 t_ignore = ' \t\v\r'
 
@@ -156,9 +121,25 @@ def execute(args):
     elif char == "-":
       tape[tapeCounterX][tapeCounterY] -= 1
     elif char == ",":
-      tape[tapeCounterX][tapeCounterY] = ord(input()[0])
+      string = input()
+      tempY = 0
+      for i in string:
+        tape[tapeCounterX][tempY] = ord(i)
+        tempY += 1
     elif char == ".":
-      print(chr(tape[tapeCounterX][tapeCounterY]), end='')
+      tempY = 0
+      while(tape[tapeCounterX][tempY] != 0):
+        if((tape[tapeCounterX][tempY] < 0) or (tape[tapeCounterX][tempY] > 127)):
+          print("\nRuntime error: cell [" + str(tapeCounterX) + "][" + str(tempY) + "] exceed printable for this interpreter. Values should be between 0 - 127.")
+          return 1
+
+        print(chr(tape[tapeCounterX][tempY]), end='')
+        tempY += 1  
+    elif char == "@":
+      tapeCounterY = 0
+    elif char == "*":
+      for y in range(rows_count):        
+        tape[tapeCounterX][y] = 0
     elif char == "[" and tape[tapeCounterX][tapeCounterY] == 0:   
       key = [y[0] for y in brackets].index(counter)
       counter = brackets[key][1]

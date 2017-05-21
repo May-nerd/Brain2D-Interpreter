@@ -1,0 +1,32 @@
+Cell 0 is space
+Cell 1 is newline
+Cell 2 is outer counter
+Cell 3 is outer number
+Cell 4 is inner counter
+Cell 5 is inner number
+Cell 6 is copy workspace
+
++++++++++                                           set cell 0 to tab
+>+++++ +++++                                        set cell 1 to new line
+
+>+++++ +++++ ++                                     set counter to 12
+[                                                   while counter is not 0
+    >+                                              increment number
+    >+++++ +++++ ++                                 set inner counter to 12
+    [                                               while inner counter is not 0
+        <[>>+>+<<<-]>>>[<<<+>>>-]                   increment inner number
+
+        >++++++++++<<[->+>-[>+>>]>[+[-<+>]>+>>]
+        <<<<<<]>>[-]>>>++++++++++<[->-[>+>>]>
+        [+[-<+>]>+>>]<<<<<]>[-]>>[>++++++
+        [-<++++++++>]<.<<+>+>[-]]<[<[->-<]++++++
+        [->++++++++<]>.[-]]<<++++++[-<++++++++>]
+        <.[-]<<[-<+>]                               print number gotten off SO
+
+        <<<<<<.                                     print space
+        >>>>-                                       go to inner counter
+    ]                                               end inner loop
+    >[-]<                                           reset number
+    <<<.                                            print new line
+    >-                                              go to counter
+]                                                   end outer loop
