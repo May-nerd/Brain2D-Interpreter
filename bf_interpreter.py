@@ -36,7 +36,7 @@ t_NEWLINE = r'\n'
 t_TOP = r'\*'
 t_CLEAR = r'\@'
 t_UP = r'\^'
-t_DOWN = r'\v'
+t_DOWN = r'v'
 
 t_ignore = ' \t\v\r'
 
